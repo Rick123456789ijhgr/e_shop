@@ -17,3 +17,9 @@ Future<List<CategoryItem>> getCategoryListAPI() async {
     return CategoryItem.fromJson(item as Map<String, dynamic>);
   }).toList();
 }
+
+Future<SpecialRecommendResult> getSpecialRecommendAPI() async {
+  return SpecialRecommendResult.fromJson(
+    await dioRequest.get(HttpConstants.PRODUCT_LIST),
+  );
+}

@@ -23,7 +23,11 @@ class _HomeViewState extends State<HomeView> {
       SliverToBoxAdapter(child: SizedBox(height: 10)),
       SliverToBoxAdapter(child: HomeCategory(categoryList: _categoryList)),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
-      SliverToBoxAdapter(child: HomeRecommendation()),
+      SliverToBoxAdapter(
+        child: HomeRecommendation(
+          specialRecommendResult: _specialRecommendResult,
+        ),
+      ),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
       SliverToBoxAdapter(
         child: Padding(
@@ -43,11 +47,18 @@ class _HomeViewState extends State<HomeView> {
     ];
   }
 
+  SpecialRecommendResult _specialRecommendResult = SpecialRecommendResult(
+    id: "",
+    title: "",
+    subTypes: [],
+  );
+
   @override
   void initState() {
     super.initState();
     _getBannerList();
     _getCategoryList();
+    _getProductList();
   }
 
   void _getBannerList() async {
@@ -57,6 +68,11 @@ class _HomeViewState extends State<HomeView> {
 
   void _getCategoryList() async {
     _categoryList = await getCategoryListAPI();
+    setState(() {});
+  }
+
+  void _getProductList() async {
+    _specialRecommendResult = await getSpecialRecommendAPI();
     setState(() {});
   }
 
