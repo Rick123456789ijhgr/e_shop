@@ -3,6 +3,7 @@ import 'package:e_shop/components/Home/HomeHot.dart';
 import 'package:e_shop/components/Home/HomeMoreList.dart';
 import 'package:e_shop/components/Home/HomeRecommendation.dart';
 import 'package:e_shop/components/Home/HomeSlider.dart';
+import 'package:e_shop/viewmodels/home.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
@@ -13,9 +14,23 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final List<BannerItem> _bannerList = [
+    BannerItem(
+      id: "1",
+      imgUrl: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meituan/1.jpg",
+    ),
+    BannerItem(
+      id: "2",
+      imgUrl: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meituan/2.jpg",
+    ),
+    BannerItem(
+      id: "3",
+      imgUrl: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meituan/3.jpg",
+    ),
+  ];
   List<Widget> _getScrollChildren() {
     return [
-      SliverToBoxAdapter(child: HomeSlider()),
+      SliverToBoxAdapter(child: HomeSlider(bannerList: _bannerList)),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
       SliverToBoxAdapter(child: HomeCategory()),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
