@@ -4,6 +4,7 @@ import 'package:e_shop/components/Home/HomeHot.dart';
 import 'package:e_shop/components/Home/HomeMoreList.dart';
 import 'package:e_shop/components/Home/HomeRecommendation.dart';
 import 'package:e_shop/components/Home/HomeSlider.dart';
+import 'package:e_shop/utils/Toastutils.dart';
 import 'package:e_shop/viewmodels/home.dart';
 import 'package:flutter/material.dart';
 
@@ -74,36 +75,33 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    _getBannerList();
-    _getCategoryList();
-    _getProductList();
-    _getInVogueList();
-    _getOneStopList();
-    _getRecommendList();
     _registerEvent();
+    Future.microtask(() {
+      _Key.currentState?.show();
+    });
   }
 
-  void _getBannerList() async {
+  Future<void> _getBannerList() async {
     _bannerList = await getBannerListAPI();
     setState(() {});
   }
 
-  void _getCategoryList() async {
+  Future<void> _getCategoryList() async {
     _categoryList = await getCategoryListAPI();
     setState(() {});
   }
 
-  void _getProductList() async {
+  Future<void> _getProductList() async {
     _specialRecommendResult = await getSpecialRecommendAPI();
     setState(() {});
   }
 
-  void _getInVogueList() async {
+  Future<void> _getInVogueList() async {
     _inVogueResult = await getInVogueListAPI();
     setState(() {});
   }
 
-  void _getOneStopList() async {
+  Future<void> _getOneStopList() async {
     _oneStopResult = await getOneStopListAPI();
     setState(() {});
   }
@@ -112,7 +110,7 @@ class _HomeViewState extends State<HomeView> {
   bool _isLoading = false;
   bool _isLoadMore = true;
 
-  void _getRecommendList() async {
+  Future<void> _getRecommendList() async {
     if (_isLoading || !_isLoadMore) {
       return;
     }
@@ -138,12 +136,33 @@ class _HomeViewState extends State<HomeView> {
   }
 
   final ScrollController _controller = ScrollController();
+  final GlobalKey<RefreshIndicatorState> _Key =
+      GlobalKey<RefreshIndicatorState>();
+
+  Future<void> _onRefresh() async {
+    _currentPage = 1;
+    _isLoading = false;
+    _isLoadMore = true;
+    await _getBannerList();
+    await _getCategoryList();
+    await _getProductList();
+    await _getInVogueList();
+    await _getOneStopList();
+    await _getRecommendList();
+    ToastUtils.showToast(context, "加載成功了");
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: _controller,
-      slivers: _getScrollChildren(),
+    return RefreshIndicator(
+      key: _Key,
+      onRefresh: () async {
+        await _onRefresh();
+      },
+      child: CustomScrollView(
+        controller: _controller,
+        slivers: _getScrollChildren(),
+      ),
     );
   }
 }
