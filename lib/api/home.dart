@@ -23,3 +23,26 @@ Future<SpecialRecommendResult> getSpecialRecommendAPI() async {
     await dioRequest.get(HttpConstants.PRODUCT_LIST),
   );
 }
+
+Future<SpecialRecommendResult> getInVogueListAPI() async {
+  return SpecialRecommendResult.fromJson(
+    await dioRequest.get(HttpConstants.IN_VOGUE_LIST),
+  );
+}
+
+Future<SpecialRecommendResult> getOneStopListAPI() async {
+  return SpecialRecommendResult.fromJson(
+    await dioRequest.get(HttpConstants.ONE_STOP_LIST),
+  );
+}
+
+Future<List<GoodDetailItem>> getRecommendListAPI(
+  Map<String, dynamic> params,
+) async {
+  return ((await dioRequest.get(HttpConstants.RECOMMEND_LIST, params: params))
+          as List)
+      .map((item) {
+        return GoodDetailItem.fromJson(item as Map<String, dynamic>);
+      })
+      .toList();
+}

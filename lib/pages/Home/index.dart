@@ -35,15 +35,15 @@ class _HomeViewState extends State<HomeView> {
           child: Flex(
             direction: Axis.horizontal,
             children: [
-              Expanded(child: HomeHot()),
+              Expanded(child: HomeHot(result: _inVogueResult,type:"hot")),
               SizedBox(width: 10),
-              Expanded(child: HomeHot()),
+              Expanded(child: HomeHot(result: _oneStopResult,type:"step")),
             ],
           ),
         ),
       ),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
-      HomeMoreList(),
+      HomeMoreList(recommendList: _recommendList),
     ];
   }
 
@@ -53,12 +53,29 @@ class _HomeViewState extends State<HomeView> {
     subTypes: [],
   );
 
+  SpecialRecommendResult _inVogueResult = SpecialRecommendResult(
+    id: "",
+    title: "",
+    subTypes: [],
+  );
+
+  SpecialRecommendResult _oneStopResult = SpecialRecommendResult(
+    id: "",
+    title: "",
+    subTypes: [],
+  );
+
+  List<GoodDetailItem> _recommendList = [];
+
   @override
   void initState() {
     super.initState();
     _getBannerList();
     _getCategoryList();
     _getProductList();
+    _getInVogueList();
+    _getOneStopList();
+    _getRecommendList();
   }
 
   void _getBannerList() async {
@@ -73,6 +90,21 @@ class _HomeViewState extends State<HomeView> {
 
   void _getProductList() async {
     _specialRecommendResult = await getSpecialRecommendAPI();
+    setState(() {});
+  }
+
+  void _getInVogueList() async {
+    _inVogueResult = await getInVogueListAPI();
+    setState(() {});
+  }
+
+  void _getOneStopList() async {
+    _oneStopResult = await getOneStopListAPI();
+    setState(() {});
+  }
+
+  void _getRecommendList() async {
+    _recommendList = await getRecommendListAPI({"limit": 10});
     setState(() {});
   }
 
