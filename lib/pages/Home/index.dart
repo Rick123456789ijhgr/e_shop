@@ -35,9 +35,13 @@ class _HomeViewState extends State<HomeView> {
           child: Flex(
             direction: Axis.horizontal,
             children: [
-              Expanded(child: HomeHot(result: _inVogueResult,type:"hot")),
+              Expanded(
+                child: HomeHot(result: _inVogueResult, type: "hot"),
+              ),
               SizedBox(width: 10),
-              Expanded(child: HomeHot(result: _oneStopResult,type:"step")),
+              Expanded(
+                child: HomeHot(result: _oneStopResult, type: "step"),
+              ),
             ],
           ),
         ),
@@ -76,6 +80,7 @@ class _HomeViewState extends State<HomeView> {
     _getInVogueList();
     _getOneStopList();
     _getRecommendList();
+    _registerEvent();
   }
 
   void _getBannerList() async {
@@ -103,13 +108,42 @@ class _HomeViewState extends State<HomeView> {
     setState(() {});
   }
 
+  int _currentPage = 1;
+  bool _isLoading = false;
+  bool _isLoadMore = true;
+
   void _getRecommendList() async {
-    _recommendList = await getRecommendListAPI({"limit": 10});
+    if (_isLoading || !_isLoadMore) {
+      return;
+    }
+    _isLoading = true;
+    int requestPage = _currentPage * 10;
+    _recommendList = await getRecommendListAPI({"limit": requestPage});
+    _isLoading = false;
     setState(() {});
+    if (_recommendList.length < requestPage) {
+      _isLoadMore = false;
+      return;
+    }
+    _currentPage++;
   }
+
+  void _registerEvent() {
+    _controller.addListener(() {
+      if (_controller.position.pixels >=
+          _controller.position.maxScrollExtent - 50) {
+        _getRecommendList();
+      }
+    });
+  }
+
+  final ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(slivers: _getScrollChildren());
+    return CustomScrollView(
+      controller: _controller,
+      slivers: _getScrollChildren(),
+    );
   }
 }
