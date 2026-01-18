@@ -60,38 +60,40 @@ class _HomeRecommendationState extends State<HomeRecommendation> {
   List<Widget> _getChildrenList() {
     List<GoodsItem> list = _getDisplayItems();
     return List.generate(list.length, (int index) {
-      return Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              color: Colors.white,
-              width: 100,
-              height: 140,
-              child: Image.network(
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset("lib/assets/home_cmd_inner.png");
-                },
-                list[index].picture,
-                width: 100,
+      return Expanded(
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                color: Colors.white,
+                // width: 100,
                 height: 140,
-                fit: BoxFit.cover,
+                child: Image.network(
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset("lib/assets/home_cmd_inner.png");
+                  },
+                  list[index].picture,
+                  // width: 100,
+                  height: 140,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.pink,
-              borderRadius: BorderRadius.circular(12),
+            SizedBox(height: 10),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.pink,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                "${list[index].price}元",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-            child: Text(
-              "${list[index].price}元",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+          ],
+        ),
       );
     });
   }
@@ -118,8 +120,10 @@ class _HomeRecommendationState extends State<HomeRecommendation> {
             Row(
               children: [
                 _buildLeft(),
+                SizedBox(width: 10),
                 Expanded(
                   child: Row(
+                    spacing: 10,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: _getChildrenList(),
                   ),
